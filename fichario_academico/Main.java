@@ -11,7 +11,7 @@ public class Main {
 
         // ArrayList<Student> students = new ArrayList();
         // File_student file_student = new File_student();
-        // File_professor file_professor = new File_professor();    
+        // File_professor file_professor = new File_professor();
         // File_class file_class = new File_class();
         Student students[] = new Student[100];
         Professor professors[] = new Professor[100];
@@ -34,7 +34,7 @@ public class Main {
             outside_option = scan.nextShort();
             switch (outside_option) {
                 case 0:
-                System.out.println("------------------------");
+                    System.out.println("------------------------");
                     break;
                 case 1:
                     do {
@@ -55,10 +55,10 @@ public class Main {
                                 file_student.addStudent(file_class);
                                 break;
                             case 2:
-                                file_student.changeStudent();
+                                file_student.changeStudent(file_class);
                                 break;
                             case 3:
-                                file_student.removeStudent();
+                                file_student.removeStudent(file_class);
                                 break;
                             case 4:
                                 file_student.consultStudent();
@@ -110,7 +110,7 @@ public class Main {
                                 System.out.println("Incorrect option");
                                 break;
                         }
-                    } while (inside_option != 0);   //professor
+                    } while (inside_option != 0); // professor
                     break;
                 case 3:
 
@@ -147,7 +147,7 @@ public class Main {
                                 System.out.println("Incorrect option");
                                 break;
                         }
-                    } while (inside_option != 0);   // class
+                    } while (inside_option != 0); // class
 
                     break;
                 default:

@@ -14,15 +14,16 @@ public class File_student {
     }
 
     public void addStudent(File_class file_class) {
-        int i = 0;
-        System.out.println("Add student method");
+        System.out.println("Add student method\n");
+        int j = 0, i = 0;
+        boolean flag = false;
 
-        while (students[i] != null && i < MAX_STUDANTS_CAPACITY - 1) {
+        while (students[i] != null && i < MAX_STUDANTS_CAPACITY - 1)
             i++;
-        }
 
         if (i < MAX_STUDANTS_CAPACITY) {
             String name, email, ID;
+
             System.out.println("___ Student Registration ___");
             System.out.println("Input Student Name: ");
             name = scanner.nextLine();
@@ -31,41 +32,34 @@ public class File_student {
             System.out.println("Input Student ID: ");
             ID = scanner.nextLine();
 
-            int j;
-            boolean flag = false;
-            for(j = 0; j<MAX_STUDANTS_CAPACITY; j++)    //procura se existe plmns 1 classe
-                if(file_class.getClasses()[j] != null){
-                    flag = true;
-                    break;
-                }
-            
-            if(flag){
+            if (file_class.getQTDClasses() > 0) {
+                flag = true;
+                String newClassID = null;
                 System.out.println("Input Class ID (if student is not matriculate press [ENTER]: ");
-                scanner.reset();
-                String newClassID;
-                newClassID = scanner.nextLine();
 
-            while (newClassID != "" && flag) {
-                for (j = 0; j < MAX_STUDANTS_CAPACITY; j++)
-                    if (file_class.getClasses()[j] != null)
-                        if (newClassID.equals(file_class.getClasses()[j].getClassID())){
-                            flag = false;
-                            break;
-                        }
-
-                if (flag) {
-                    System.out.println("Incorrect Class ID, try again or press [ENTER] if student is not matriculate: ");
+                while (newClassID != "" && flag) {
                     scanner.reset();
                     newClassID = scanner.nextLine();
-                }
-            }
+                    for (j = 0; j < MAX_STUDANTS_CAPACITY; j++)
+                        if (file_class.getClasses()[j] != null)
+                            if (newClassID.equals(file_class.getClasses()[j].getClassID())) {
+                                flag = false;
+                                break;
+                            }
 
-            Student student = new Student(name, email, ID, newClassID);
-            students[i] = student;
-            if (newClassID != "") {
-                file_class.relacionateStudentClass(students[i], file_class.getClasses()[j]);
-            }
-            return;
+                    if (flag)
+                        System.out.println(
+                                "Incorrect Class ID, try again or press [ENTER] if student is not matriculate: ");
+                }
+
+                Student student = new Student(name, email, ID, newClassID);
+                students[i] = student;
+                System.out.println("Student " + name + " is now registered.");
+
+                if (newClassID != "") {
+                    file_class.relacionateStudentClass(students[i], file_class.getClasses()[j]);
+                    return;
+                }
             }
 
             Student student = new Student(name, email, ID, null);
@@ -75,17 +69,16 @@ public class File_student {
             System.out.println("MAXIMUM CAPACITY OF STUDENTS ACHIEVED");
     }
 
-    public void changeStudent() {
+    public void changeStudent(File_class file_class) {
+        System.out.println("Change student method\n");
         String IDchange;
-        boolean flag = false;
-        System.out.println("Change student method");
         System.out.println("Inform the ID of a student to change: ");
         IDchange = scanner.nextLine();
+
         for (int i = 0; i < MAX_STUDANTS_CAPACITY; i++) {
             if (students[i] != null)
-                if (IDchange.equals(students[i].getStudentID()) && flag == false) {
-                    flag = true;
-                    String newName, newEmail, newCPF, newCellphone, newClassID;
+                if (IDchange.equals(students[i].getStudentID())) {
+                    String newName, newEmail, newCPF, newCellphone, newClassID = "";
 
                     System.out.println("Inform the name of the student: ");
                     newName = scanner.nextLine();
@@ -95,38 +88,70 @@ public class File_student {
                     newCPF = scanner.nextLine();
                     System.out.println("Inform the cellphone of the student: ");
                     newCellphone = scanner.nextLine();
-                    System.out.println("Inform the class ID of the student: ");
-                    newClassID = scanner.nextLine();
 
-                    Student newStudent = new Student(newName, newEmail, students[i].studentID, newClassID);
-                    newStudent.setCPF(newCPF);
-                    newStudent.setCellphone(newCellphone);
-                    students[i] = newStudent;
+                    students[i].setName(newName);
+                    students[i].setEmail(newEmail);
+                    students[i].setCPF(newCPF);
+                    students[i].setCellphone(newCellphone);
+
+                    if (file_class.getQTDClasses() > 0) {
+                        boolean flag = true;
+                        int j = 0;
+                        System.out.println("Input Class ID (if student is not matriculate press [ENTER]: ");
+
+                        while (newClassID != "" && flag) {
+                            scanner.reset();
+                            newClassID = scanner.nextLine();
+                            for (j = 0; j < MAX_STUDANTS_CAPACITY; j++)
+                                if (file_class.getClasses()[j] != null)
+                                    if (newClassID.equals(file_class.getClasses()[j].getClassID())) {
+                                        flag = false;
+                                        file_class.removeStudentClass(students[i], students[i].getClassID());
+                                        break;
+                                    }
+
+                            if (flag)   // TODO: problemas aq (mostrando mensagem errada e talvez não associando aluno na classe)
+                                System.out.println(
+                                        "Incorrect Class ID, try again or press [ENTER] if student is not matriculate: ");
+                        }
+
+                        if (newClassID != "") {
+                            file_class.relacionateStudentClass(students[i], file_class.getClasses()[j]);
+                            students[i].setClassID(newClassID);
+                        } else
+                            students[i].setClassID(newClassID);
+                    }
+
+                    System.out.println("Student " + newName + " was changed.");
+                    return;
                 }
         }
-        if (!flag)
-            System.out.println("Student ID not found");
+
+        System.out.println("Student ID not found");
     }
 
-    public void removeStudent() {
-        System.out.println("Remove student method");
+    public void removeStudent(File_class file_class) {
+        System.out.println("Remove student method\n");
         System.out.println("Inform a student ID to remove: ");
         String IDremove;
-        boolean flag = false;
         IDremove = scanner.nextLine();
 
         for (int i = 0; i < MAX_STUDANTS_CAPACITY; i++)
-            if (IDremove.equals(students[i].getStudentID())) {
-                students[i] = null;
-                flag = true;
-            }
+            if (students[i] != null)
+                if (IDremove.equals(students[i].getStudentID())) {
+                    if (students[i].getClassID() != null || students[i].getClassID() != "") {
+                        file_class.removeStudentClass(students[i], students[i].getClassID());
+                        students[i] = null;
+                    }
+                    System.out.println("Student " + IDremove + " correctly removed.");
+                    return;
+                }
 
-        if (!flag)
-            System.out.println("Student ID not found");
+        System.out.println("Student ID not found");
     }
 
     public void consultStudent() {
-        System.out.println("Search student method");
+        System.out.println("Search student method\n");
         System.out.println("1 - Name\n2 - Student ID\n3 - Email");
         int option;
         option = scanner.nextInt();
@@ -153,13 +178,13 @@ public class File_student {
         scanner.nextLine();
         scanner.reset();
         name = scanner.nextLine();
-        for (int i = 0; i < MAX_STUDANTS_CAPACITY && !flag; i++) 
+        for (int i = 0; i < MAX_STUDANTS_CAPACITY && !flag; i++)
             if (students[i] != null)
                 if (name.equals(students[i].getName())) {
                     System.out.println(students[i]);
                     flag = true;
                 }
-        
+
         if (!flag)
             System.out.println("System did not find student " + name);
     }
@@ -201,7 +226,7 @@ public class File_student {
     }
 
     public void reportStatus() {
-        System.out.println("Consult all students method");
+        System.out.println("Consult all students method\n");
         System.out.println("------------------------");
         for (int i = 0; i < MAX_STUDANTS_CAPACITY; i++)
             if (students[i] != null)
