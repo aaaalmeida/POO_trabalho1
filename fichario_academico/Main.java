@@ -32,11 +32,13 @@ public class Main {
             System.out.println("2 - PROFESSOR");
             System.out.println("3 - CLASS");
             outside_option = scan.nextShort();
-            switch (outside_option) {
-                case 0:
+            try{
+
+                switch (outside_option) {
+                    case 0:
                     System.out.println("------------------------");
                     break;
-                case 1:
+                    case 1:
                     do {
                         System.out.println("\n------------------------");
                         System.out.println("____ STUDENT MENU ____");
@@ -52,25 +54,25 @@ public class Main {
                                 System.out.println("------------------------");
                                 break;
                             case 1:
-                                file_student.addStudent(file_class);
-                                break;
+                            file_student.addStudent(file_class);
+                            break;
                             case 2:
-                                file_student.changeStudent(file_class);
-                                break;
+                            file_student.changeStudent(file_class);
+                            break;
                             case 3:
                                 file_student.removeStudent(file_class);
                                 break;
-                            case 4:
+                                case 4:
                                 file_student.consultStudent();
                                 break;
-                            case 5:
+                                case 5:
                                 file_student.reportStatus();
                                 break;
-                            default:
+                                default:
                                 System.out.println("Incorrect option");
                                 break;
-                        }
-                    } while (inside_option != 0); // student
+                            }
+                        } while (inside_option != 0); // student
                     break;
                 case 2:
                     do {
@@ -80,40 +82,44 @@ public class Main {
                         System.out.println("1 - ADD PROFESSOR");
                         System.out.println("2 - CHANGE PROFESSOR");
                         System.out.println("3 - ASSOCIATE PROFESSOR IN A CLASS");
-                        System.out.println("4 - REMOVE PROFESSOR");
-                        System.out.println("5 - CONSULT PROFESSOR");
-                        System.out.println("6 - CONSULT ALL PROFESSORS");
+                        System.out.println("4 - DISASSOCIATE PROFESSOR FROM A CLASS");
+                        System.out.println("5 - REMOVE PROFESSOR");
+                        System.out.println("6 - CONSULT PROFESSOR");
+                        System.out.println("7 - CONSULT ALL PROFESSORS");
                         inside_option = scan.nextShort();
                         switch (inside_option) {
                             case 0:
-                                System.out.println("------------------------");
-                                break;
+                            System.out.println("------------------------");
+                            break;
                             case 1:
-                                file_professor.addProfessor();
-                                break;
+                            file_professor.addProfessor();
+                            break;
                             case 2:
-                                file_professor.changeProfessor();
-                                break;
+                            file_professor.changeProfessor();
+                            break;
                             case 3:
-                                file_professor.associateProfessor(file_class);
-                                break;
+                            file_professor.associateProfessor(file_class);
+                            break;
                             case 4:
-                                file_professor.removeProfessor();
-                                break;
+                            file_professor.disassociateProfessorClass(file_class);
+                            break;
                             case 5:
-                                file_professor.consultProfessor();
-                                break;
+                            file_professor.removeProfessor(file_class);
+                            break;
                             case 6:
-                                file_professor.reportStatus();
-                                break;
+                            file_professor.consultProfessor();
+                            break;
+                            case 7:
+                            file_professor.reportStatus();
+                            break;
                             default:
-                                System.out.println("Incorrect option");
-                                break;
+                            System.out.println("Incorrect option");
+                            break;
                         }
                     } while (inside_option != 0); // professor
                     break;
-                case 3:
-
+                    case 3:
+                    
                     do {
                         System.out.println("------------------------");
                         System.out.println("____ CLASS MENU ____");
@@ -126,37 +132,41 @@ public class Main {
                         inside_option = scan.nextShort();
                         switch (inside_option) {
                             case 0:
-                                System.out.println("------------------------");
-                                break;
+                            System.out.println("------------------------");
+                            break;
                             case 1:
-                                file_class.addClass(file_professor);
-                                break;
+                            file_class.addClass(file_professor);
+                            break;
                             case 2:
-                                file_class.changeClass();
-                                break;
+                            file_class.changeClass();
+                            break;
                             case 3:
-                                file_class.removeClass();
-                                break;
+                            file_class.removeClass();
+                            break;
                             case 4:
-                                file_class.consultClass();
-                                break;
+                            file_class.consultClass();
+                            break;
                             case 5:
-                                file_class.reportStatus();
-                                break;
+                            file_class.reportStatus();
+                            break;
                             default:
-                                System.out.println("Incorrect option");
-                                break;
+                            System.out.println("Incorrect option");
+                            break;
                         }
                     } while (inside_option != 0); // class
-
+                    
                     break;
-                default:
+                    default:
                     System.out.println("Incorrect option");
                     break;
+                }
+            } catch (Exception e) {
+                System.out.println("PRESS A CORRECT KEY ");
             }
-
-        } while (outside_option != 0); // academic
-        System.out.println("End of Program :)");
-        scan.close();
+                
+            } while (outside_option != 0); // academic
+            System.out.println("End of Program :)");
+            scan.close();
+        }
     }
-}
+    

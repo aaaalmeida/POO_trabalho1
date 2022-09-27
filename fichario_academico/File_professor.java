@@ -46,7 +46,7 @@ public class File_professor {
             ID = scanner.nextLine();
             Professor professor = new Professor(name, email, ID);
             professors[i] = professor;
-            System.out.println("Professor " + name + "is now registered.");
+            System.out.println("Professor " + name + " is now registered.");
         } else
             System.out.println("MAXIMUM CAPACITY OF PROFESSORS ACHIEVED");
     }
@@ -102,13 +102,14 @@ public class File_professor {
             return;
         }
 
-        String classID;
+        String classID = null;
         int cont = 1;
         System.out.printf("Inform %d Class ID to link to a Professor: ", cont);
-        classID = scanner.nextLine();
         do {
+            classID = scanner.nextLine();
             boolean flag = false;
-            for (int j = 0; j < MAX_PROFESSOR_CAPACITY && !flag; j++) {
+
+            for (int j = 0; j < MAX_PROFESSOR_CAPACITY && flag; j++) {
                 if (classID.equals(file_class.getClasses()[i].getClassID())) {
                     file_class.getClasses()[i].setProfessor(professors[i]);
                     flag = true;
@@ -117,12 +118,59 @@ public class File_professor {
             }
             if (!flag)
                 System.out.println("Wrong Class ID");
+
             System.out.printf("Inform %d Class ID to link to a Professor or press [ENTER]: ", cont);
-            classID = scanner.nextLine();
         } while (classID != "");
     }
 
-    public void removeProfessor() {
+    public void disassociateProfessorClass(File_class file_class) {
+        System.out.println("Disassociate professor method\n");
+        System.out.println("Inform a professor ID to remove from a class: ");
+        String prof;
+        prof = scanner.nextLine();
+        int i;
+        for (i = 0; i < MAX_PROFESSOR_CAPACITY; i++)
+            if (professors[i] != null)
+                if (prof.equals(professors[i].getProfessorID()))
+                    break;
+
+        if (i >= MAX_PROFESSOR_CAPACITY) {
+            System.out.println("Professor ID not found.");
+            return;
+        }
+
+        int j;
+        String removeClass = null;
+        System.out.println("Inform Class ID to disassociate: ");
+        do {
+            removeClass = scanner.nextLine();
+            boolean flag = false;
+            for (j = 0; j < MAX_PROFESSOR_CAPACITY; j++) {
+                if (file_class.getClasses()[j] != null)
+                    if (removeClass.equals(file_class.getClasses()[j].getClassID())) {
+                        if (file_class.getClasses()[j].getProfessor() != null) {
+                            if (prof.equals(file_class.getClasses()[j].getProfessor().getProfessorID())) {
+                                System.out.printf("Professor %s removed from class %s", prof,
+                                        file_class.getClasses()[j].getClassID());
+                                file_class.getClasses()[j].setProfessor(null);
+                                flag = true;
+                                break;
+                            }
+                        } else {
+                            System.out.printf("Professor %s is not associate to class %s",
+                                    prof, file_class.getClasses()[j].getClassID());
+                            break;
+                        }
+                    }
+            }
+            if (!flag)
+                System.out.println("Class not found");
+
+            System.out.println("Inform Class ID to disassociate or press [ENTER]: ");
+        } while (removeClass != "");
+    }
+
+    public void removeProfessor(File_class file_class) {
         System.out.println("Remove professor method\n");
         System.out.println("Inform a professor ID to remove: ");
         String IDremove;
@@ -130,11 +178,13 @@ public class File_professor {
         IDremove = scanner.nextLine();
 
         for (int i = 0; i < MAX_PROFESSOR_CAPACITY && !flag; i++) {
-            if (IDremove.equals(professors[i].getProfessorID())) {
-                professors[i] = null;
-                flag = true;
-                setQTDProfessor(-1);
-            }
+            if(professors[i] != null)
+                if (IDremove.equals(professors[i].getProfessorID())) {
+                    file_class.removeProfessorClass(professors[i]);
+                    professors[i] = null;
+                    flag = true;
+                    setQTDProfessor(-1);
+                }
         }
         if (!flag)
             System.out.println("Professor ID " + IDremove + " not found");
@@ -167,7 +217,6 @@ public class File_professor {
         boolean flag = false;
         System.out.println("Input Professor Name: ");
         String name;
-        // scanner.nextLine();
         scanner.reset();
         name = scanner.nextLine();
         for (int i = 0; i < MAX_PROFESSOR_CAPACITY && !flag; i++) {
@@ -203,7 +252,6 @@ public class File_professor {
         boolean flag = false;
         System.out.println("Input Professor Email: ");
         String email;
-        // scanner.nextLine();
         scanner.reset();
         email = scanner.nextLine();
         for (int i = 0; i < MAX_PROFESSOR_CAPACITY && !flag; i++) {

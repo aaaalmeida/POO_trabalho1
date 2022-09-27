@@ -81,28 +81,27 @@ public class File_class {
         System.out.println("Remove class method\n");
         System.out.println("Inform a class ID to remove: ");
         String removeID;
+        boolean flag = false;
+        int i;
         removeID = scanner.nextLine();
-        for (int i = 0; i < MAX_CLASS_CAPACITY; i++)
-            if (classes[i] != null) {
-                if (removeID.equals(classes[i].getClassID()) && !securityLock(classes[i])) {
-                    System.out.println("Class " + classes[i].getClassID() + " successful removed.");
-                    classes[i] = null;
-                    setQTDClasses(-1);
-                    return;
+
+        for (i = 0; i < MAX_CLASS_CAPACITY; i++)
+            if (classes[i] != null)
+                if (removeID.equals(classes[i].getClassID())) {
+                    flag = true;
+                    break;
                 }
-            }
 
-        System.out.println("Class ID not found");
-    }
-
-    public boolean securityLock(Class classTest) {
-        for (int i = 0; i < MAX_CLASS_CAPACITY; i++) {
-            if (classTest.getStudents()[i] != null) {
+        if (!flag)
+            System.out.println("Class ID not found");
+        else {
+            if (classes[i].getQTDStudents() == 0) {
+                System.out.println("Class " + classes[i].getClassID() + " successful removed.");
+                classes[i] = null;
+                setQTDClasses(-1);
+            } else if (classes[i].getQTDStudents() > 0)
                 System.out.println("Class already has students, you can not remove it");
-                return true;
-            }
         }
-        return false;
     }
 
     public void relacionateStudentClass(Student student, Class class1) {
@@ -122,11 +121,11 @@ public class File_class {
     }
 
     public void removeStudentClass(Student student, String classRemove) {
-        for (int i = 0; i < MAX_CLASS_CAPACITY; i++) {
+        for (int i = 0; i < MAX_CLASS_CAPACITY; i++)
             if (classes[i] != null)
-                if (classRemove.equals(classes[i].getClassID())) {
+                if (classRemove.equals(classes[i].getClassID()))
 
-                    for (int j = 0; j < MAX_CLASS_CAPACITY; j++) {
+                    for (int j = 0; j < MAX_CLASS_CAPACITY; j++)
                         if (classes[i].getStudents()[j] != null)
                             if (student.equals(classes[i].getStudents()[j])) {
                                 classes[i].setStudent(null, j);
@@ -135,9 +134,16 @@ public class File_class {
                                         + classes[i].getClassName());
                                 return;
                             }
-                    }
+
+    }
+
+    public void removeProfessorClass(Professor prof){
+        for(int i=0; i<MAX_CLASS_CAPACITY; i++)
+            if(classes[i] != null)
+                if(prof.equals(classes[i].getProfessor())){
+                    classes[i].setProfessor(null);
+                    System.out.printf("Professor %s removed from class %s", prof.getName(), classes[i].getClassName());
                 }
-        }
     }
 
     public void changeClass() {
@@ -198,6 +204,14 @@ public class File_class {
                 if (name.equals(classes[i].getClassName())) {
                     System.out.println(classes[i]);
                     flag = true;
+                    if (classes[i].getQTDStudents() > 0) {
+                        System.out.println("Students:");
+                        for (int j = 0; j < MAX_CLASS_CAPACITY; j++) {
+                            if (classes[i].getStudents()[j] != null) {
+                                System.out.println((j + 1) + " - " + classes[i].getStudents()[j].getName());
+                            }
+                        }
+                    }
                 }
         }
         if (!flag)
@@ -215,6 +229,14 @@ public class File_class {
             if (ID.equals(classes[i].getClassID())) {
                 System.out.println(classes[i]);
                 flag = true;
+                if (classes[i].getQTDStudents() > 0) {
+                    System.out.println("Students:");
+                    for (int j = 0; j < MAX_CLASS_CAPACITY; j++) {
+                        if (classes[i].getStudents()[j] != null) {
+                            System.out.println((j + 1) + " - " + classes[i].getStudents()[j].getName());
+                        }
+                    }
+                }
             }
         }
         if (!flag)

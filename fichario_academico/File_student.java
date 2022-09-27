@@ -35,7 +35,7 @@ public class File_student {
             if (file_class.getQTDClasses() > 0) {
                 flag = true;
                 String newClassID = null;
-                System.out.println("Input Class ID (if student is not matriculate press [ENTER]: ");
+                System.out.println("Input Class ID (if student is not matriculate press [ENTER]): ");
 
                 while (newClassID != "" && flag) {
                     scanner.reset();
@@ -78,7 +78,7 @@ public class File_student {
         for (int i = 0; i < MAX_STUDANTS_CAPACITY; i++) {
             if (students[i] != null)
                 if (IDchange.equals(students[i].getStudentID())) {
-                    String newName, newEmail, newCPF, newCellphone, newClassID = "";
+                    String newName, newEmail, newCPF, newCellphone, newClassID = null;
 
                     System.out.println("Inform the name of the student: ");
                     newName = scanner.nextLine();
@@ -97,7 +97,7 @@ public class File_student {
                     if (file_class.getQTDClasses() > 0) {
                         boolean flag = true;
                         int j = 0;
-                        System.out.println("Input Class ID (if student is not matriculate press [ENTER]: ");
+                        System.out.println("Input Class ID (if student is not matriculate press [ENTER]): ");
 
                         while (newClassID != "" && flag) {
                             scanner.reset();
@@ -105,21 +105,21 @@ public class File_student {
                             for (j = 0; j < MAX_STUDANTS_CAPACITY; j++)
                                 if (file_class.getClasses()[j] != null)
                                     if (newClassID.equals(file_class.getClasses()[j].getClassID())) {
+                                        if (students[i].getClass() != null && students[i].getClassID() != "")
+                                            file_class.removeStudentClass(students[i], students[i].getClassID());
                                         flag = false;
-                                        file_class.removeStudentClass(students[i], students[i].getClassID());
                                         break;
                                     }
 
-                            if (flag)   // TODO: problemas aq (mostrando mensagem errada e talvez não associando aluno na classe)
+                            if (flag && newClassID != "")
                                 System.out.println(
                                         "Incorrect Class ID, try again or press [ENTER] if student is not matriculate: ");
                         }
 
-                        if (newClassID != "") {
+                        if (newClassID != "")
                             file_class.relacionateStudentClass(students[i], file_class.getClasses()[j]);
-                            students[i].setClassID(newClassID);
-                        } else
-                            students[i].setClassID(newClassID);
+
+                        students[i].setClassID(newClassID);
                     }
 
                     System.out.println("Student " + newName + " was changed.");
